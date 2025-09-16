@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JailCoin - Breaking Free from Traditional Finance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+      
+      :root {
+        --jail-dark: #1a1a1a;
+        --jail-darker: #0f0f0f;
+        --jail-gold: #d4af37;
+        --jail-silver: #c0c0c0;
+        --jail-bronze: #cd7f32;
+        --jail-steel: #71797e;
+      }
+      
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--jail-darker);
+        color: #ffffff;
+      }
+      
+      .orbitron {
+        font-family: 'Orbitron', monospace;
+      }
+      
+      .jail-gradient {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+      }
+      
+      .gold-gradient {
+        background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+      }
+      
+      .cell-pattern {
+        background-image: 
+          linear-gradient(90deg, rgba(212, 175, 55, 0.1) 1px, transparent 1px),
+          linear-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        position: relative;
+      }
+      
+      .cell-bars {
+        background: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 30px,
+          rgba(212, 175, 55, 0.3) 30px,
+          rgba(212, 175, 55, 0.3) 32px
+        );
+      }
+      
+      .cell-shadow {
+        box-shadow: 
+          inset 0 0 50px rgba(0, 0, 0, 0.8),
+          0 0 30px rgba(212, 175, 55, 0.2);
+      }
+      
+      .lock-glow {
+        filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6));
+        animation: lock-pulse 3s infinite;
+      }
+      
+      @keyframes lock-pulse {
+        0%, 100% { filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6)); }
+        50% { filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.9)); }
+      }
+      
+      .card-hover {
+        transition: all 0.4s ease;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+      
+      .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 
+          0 25px 50px rgba(0, 0, 0, 0.5),
+          0 0 30px rgba(212, 175, 55, 0.3);
+        border-color: rgba(212, 175, 55, 0.5);
+      }
+      
+      .btn-gold {
+        background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+        color: #000;
+        font-weight: 700;
+        text-shadow: none;
+        box-shadow: 
+          0 8px 25px rgba(212, 175, 55, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 12px 35px rgba(212, 175, 55, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+      
+      .btn-silver {
+        background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 50%, #c0c0c0 100%);
+        color: #000;
+        font-weight: 700;
+        box-shadow: 
+          0 8px 25px rgba(192, 192, 192, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-silver:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 12px 35px rgba(192, 192, 192, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+      
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+      }
+      
+      .modal-content {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        margin: 10% auto;
+        padding: 3rem;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 600px;
+        position: relative;
+        animation: modalSlideIn 0.4s ease-out;
+        border: 2px solid rgba(212, 175, 55, 0.3);
+        box-shadow: 
+          0 30px 60px rgba(0, 0, 0, 0.8),
+          0 0 50px rgba(212, 175, 55, 0.2);
+      }
+      
+      @keyframes modalSlideIn {
+        from { opacity: 0; transform: translateY(-100px) scale(0.8); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      
+      .close {
+        color: var(--jail-gold);
+        float: right;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .close:hover {
+        color: #ffd700;
+        transform: scale(1.2);
+      }
+      
+      .text-gold {
+        color: var(--jail-gold);
+      }
+      
+      .text-silver {
+        color: var(--jail-silver);
+      }
+      
+      .border-gold {
+        border-color: var(--jail-gold);
+      }
+      
+      .bg-jail-card {
+        background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+      }
+      
+      .progress-bar {
+        background: linear-gradient(90deg, #d4af37 0%, #ffd700 100%);
+        height: 6px;
+        border-radius: 3px;
+        animation: progress-glow 2s infinite alternate;
+      }
+      
+      @keyframes progress-glow {
+        0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+      }
+      
+      .chain-link {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid var(--jail-gold);
+        border-radius: 50%;
+        margin: 0 5px;
+        animation: chain-rattle 3s infinite;
+      }
+      
+      @keyframes chain-rattle {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(5deg); }
+        75% { transform: rotate(-5deg); }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900">
+    <!-- Navigation -->
+    <nav class="jail-gradient shadow-2xl fixed w-full top-0 z-50 cell-bars">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <div class="flex items-center">
+            <div class="text-3xl font-bold orbitron text-gold flex items-center lock-glow">
+              🔒 JailCoin
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-6">
+              <a href="#mission" class="text-silver hover:text-gold px-4 py-2 rounded-lg text-sm font-medium transition duration-300 orbitron">MISSION</a>
+              <a href="#features" class="text-silver hover:text-gold px-4 py-2 rounded-lg text-sm font-medium transition duration-300 orbitron">FEATURES</a>
+              <a href="#tokenomics" class="text-silver hover:text-gold px-4 py-2 rounded-lg text-sm font-medium transition duration-300 orbitron">TOKENOMICS</a>
+              <a href="#roadmap" class="text-silver hover:text-gold px-4 py-2 rounded-lg text-sm font-medium transition duration-300 orbitron">ROADMAP</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="jail-gradient pt-24 pb-40 text-white cell-pattern cell-shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <div class="mb-8">
+            <div class="text-8xl mb-6 lock-glow">🔒</div>
+            <div class="flex justify-center items-center mb-6">
+              <span class="chain-link"></span>
+              <span class="chain-link"></span>
+              <span class="chain-link"></span>
+            </div>
+          </div>
+          <h1 class="text-6xl md:text-8xl font-bold mb-8 orbitron">
+            BREAK FREE WITH
+            <span class="block text-gold text-shadow-lg">JAILCOIN</span>
+          </h1>
+          <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed text-silver">
+            The revolutionary cryptocurrency that shatters the chains of traditional finance. 
+            Join the 2025 liberation movement towards true financial sovereignty and decentralized prosperity.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <button onclick="openModal()" class="btn-gold px-12 py-6 rounded-full text-xl orbitron tracking-wider">
+              🎁 GET REWARDS
+            </button>
+            <button onclick="openModal()" class="btn-silver px-12 py-6 rounded-full text-xl orbitron tracking-wider">
+              💎 MINT $25 NFT
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="mission" class="py-24 bg-jail-card cell-pattern">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+          <h2 class="text-5xl md:text-6xl font-bold text-white mb-8 orbitron">OUR MISSION</h2>
+          <p class="text-xl text-silver max-w-4xl mx-auto">
+            JailCoin represents the ultimate rebellion against financial oppression and centralized control in 2025
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+          <div>
+            <h3 class="text-4xl font-bold text-gold mb-8 orbitron">BREAKING THE CHAINS OF FINANCIAL IMPRISONMENT</h3>
+            <p class="text-lg text-gray-300 mb-8 leading-relaxed">
+              For decades, traditional financial institutions have kept the masses locked in a system of dependency, 
+              exorbitant fees, and limited access to wealth-building opportunities. JailCoin is the master key that unlocks these chains.
+            </p>
+            <p class="text-lg text-gray-300 mb-8 leading-relaxed">
+              Our mission is to demolish financial barriers, eliminate corrupt intermediaries, and arm every individual 
+              with the tools they need to achieve absolute financial sovereignty. We believe that financial freedom 
+              is not a privilege for the elite—it's a fundamental human right.
+            </p>
+            <div class="space-y-6">
+              <div class="flex items-center">
+                <div class="w-4 h-4 bg-gold rounded-full mr-6"></div>
+                <span class="text-silver font-medium orbitron">ELIMINATE BANKING TYRANNY & HIDDEN CHARGES</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 bg-gold rounded-full mr-6"></div>
+                <span class="text-silver font-medium orbitron">PROVIDE 24/7 GLOBAL ACCESS TO YOUR WEALTH</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 bg-gold rounded-full mr-6"></div>
+                <span class="text-silver font-medium orbitron">ENABLE UNCENSORABLE P2P TRANSACTIONS</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <h4 class="text-3xl font-bold text-gold mb-6 orbitron">THE JAILCOIN MANIFESTO</h4>
+            <blockquote class="text-lg text-gray-300 italic leading-relaxed">
+              "Every transaction is a strike against oppression. Every holder is a freedom fighter. 
+              Every block mined is another bar shattered in the prison of financial slavery. 
+              In 2025, we don't just break free—we obliterate the entire system."
+            </blockquote>
+            <p class="text-right text-gold font-bold mt-6 orbitron">- JAILCOIN LIBERATION FRONT</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 jail-gradient cell-bars">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+          <h2 class="text-5xl md:text-6xl font-bold text-white mb-8 orbitron">REVOLUTIONARY FEATURES</h2>
+          <p class="text-xl text-silver">
+            Built for the rebels, engineered for absolute freedom
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-10">
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-8 mx-auto">
+              <span class="text-3xl">⚡</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gold mb-6 text-center orbitron">LIGHTNING EXECUTION</h3>
+            <p class="text-gray-300 text-center leading-relaxed">
+              Obliterate slow traditional banking with transactions that execute in milliseconds. 
+              Your wealth moves at the speed of rebellion.
+            </p>
+          </div>
+          
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-8 mx-auto">
+              <span class="text-3xl">🛡️</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gold mb-6 text-center orbitron">FORTRESS SECURITY</h3>
+            <p class="text-gray-300 text-center leading-relaxed">
+              Military-grade encryption and quantum-resistant blockchain technology. 
+              Your assets are more secure than any government vault.
+            </p>
+          </div>
+          
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-8 mx-auto">
+              <span class="text-3xl">🌍</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gold mb-6 text-center orbitron">BORDERLESS DOMINION</h3>
+            <p class="text-gray-300 text-center leading-relaxed">
+              No borders, no restrictions, no discrimination. JailCoin operates everywhere, 
+              demolishing the walls of financial exclusion.
+            </p>
+          </div>
+          
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-8 mx-auto">
+              <span class="text-3xl">💰</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gold mb-6 text-center orbitron">LIBERATION REWARDS</h3>
+            <p class="text-gray-300 text-center leading-relaxed">
+              Earn exponential rewards for your commitment to freedom. 
+              The longer you fight, the greater your spoils of war.
+            </p>
+          </div>
+          
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-8 mx-auto">
+              <span class="text-3xl">🎨</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gold mb-6 text-center orbitron">ELITE NFT ARSENAL</h3>
+            <p class="text-gray-300 text-center leading-relaxed">
+              Own exclusive digital weapons of financial warfare. 
+              Each NFT is a badge of honor in the revolution.
+            </p>
+          </div>
+          
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center mb-8 mx-auto">
+              <span class="text-3xl">🗳️</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gold mb-6 text-center orbitron">REVOLUTIONARY COUNCIL</h3>
+            <p class="text-gray-300 text-center leading-relaxed">
+              Your voice commands the future. Shape JailCoin's destiny through 
+              our decentralized governance system. True democracy in action.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tokenomics Section -->
+    <section id="tokenomics" class="py-24 bg-jail-card cell-pattern">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+          <h2 class="text-5xl md:text-6xl font-bold text-white mb-8 orbitron">TOKENOMICS</h2>
+          <p class="text-xl text-silver">
+            Engineered for explosive growth and equitable distribution
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+          <div>
+            <h3 class="text-4xl font-bold text-gold mb-10 orbitron">FAIR LAUNCH REVOLUTION</h3>
+            <div class="space-y-8">
+              <div class="border-l-4 border-gold pl-8">
+                <h4 class="text-2xl font-bold text-white mb-3 orbitron">TOTAL SUPPLY: 1 BILLION JAIL</h4>
+                <p class="text-gray-300 leading-relaxed">
+                  Precisely calculated supply ensuring scarcity while maintaining accessibility for all freedom fighters.
+                </p>
+              </div>
+              
+              <div class="border-l-4 border-yellow-400 pl-8">
+                <h4 class="text-2xl font-bold text-white mb-3 orbitron">40% COMMUNITY ARSENAL</h4>
+                <p class="text-gray-300 leading-relaxed">
+                  The largest allocation goes directly to our warriors through staking rewards, 
+                  liquidity mining, and battle participation incentives.
+                </p>
+              </div>
+              
+              <div class="border-l-4 border-green-400 pl-8">
+                <h4 class="text-2xl font-bold text-white mb-3 orbitron">25% LIQUIDITY & ECOSYSTEM</h4>
+                <p class="text-gray-300 leading-relaxed">
+                  Ensuring deep liquidity and funding ecosystem expansion to support our conquest.
+                </p>
+              </div>
+              
+              <div class="border-l-4 border-blue-400 pl-8">
+                <h4 class="text-2xl font-bold text-white mb-3 orbitron">20% DEVELOPMENT WAR CHEST</h4>
+                <p class="text-gray-300 leading-relaxed">
+                  Dedicated to continuous innovation, security fortification, and expanding our empire.
+                </p>
+              </div>
+              
+              <div class="border-l-4 border-red-400 pl-8">
+                <h4 class="text-2xl font-bold text-white mb-3 orbitron">15% LEADERSHIP COUNCIL</h4>
+                <p class="text-gray-300 leading-relaxed">
+                  Vested over 4 years to ensure unwavering commitment to total victory.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-jail-card p-10 rounded-3xl card-hover cell-shadow">
+            <h4 class="text-3xl font-bold text-gold mb-8 text-center orbitron">DEFLATIONARY WARFARE</h4>
+            <div class="text-center mb-8">
+              <div class="inline-block bg-red-600 text-white px-6 py-3 rounded-full text-sm font-bold orbitron">
+                🔥 BURN PROTOCOL ACTIVE
+              </div>
+            </div>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+              3% of all transactions are permanently incinerated, reducing total supply and 
+              increasing scarcity for all freedom fighters.
+            </p>
+            <div class="bg-black p-6 rounded-2xl border border-gold">
+              <p class="text-sm text-silver mb-3 orbitron">TOKENS BURNED TO DATE:</p>
+              <p class="text-3xl font-bold text-red-400 orbitron">🔥 18,947,832 JAIL</p>
+              <div class="progress-bar mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="py-24 jail-gradient cell-bars">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+          <h2 class="text-5xl md:text-6xl font-bold text-white mb-8 orbitron">ROADMAP TO LIBERATION</h2>
+          <p class="text-xl text-silver">
+            The strategic path to financial domination is clear
+          </p>
+        </div>
+        
+        <div class="space-y-10">
+          <div class="flex items-center">
+            <div class="w-6 h-6 bg-green-400 rounded-full mr-8 flex-shrink-0"></div>
+            <div class="bg-jail-card p-8 rounded-2xl card-hover flex-grow">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-white orbitron">PHASE 1: FOUNDATION ✅</h3>
+                <span class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-medium orbitron">COMPLETE</span>
+              </div>
+              <p class="text-gray-300">Token launch, initial liquidity deployment, community mobilization, and security fortress construction</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center">
+            <div class="w-6 h-6 bg-yellow-400 rounded-full mr-8 flex-shrink-0"></div>
+            <div class="bg-jail-card p-8 rounded-2xl card-hover flex-grow">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-white orbitron">PHASE 2: EXPANSION 🚀</h3>
+                <span class="bg-yellow-600 text-white px-4 py-2 rounded-full text-sm font-medium orbitron">IN PROGRESS</span>
+              </div>
+              <p class="text-gray-300">Major exchange conquests, NFT marketplace domination, mobile app deployment</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center">
+            <div class="w-6 h-6 bg-blue-400 rounded-full mr-8 flex-shrink-0"></div>
+            <div class="bg-jail-card p-8 rounded-2xl card-hover flex-grow">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-white orbitron">PHASE 3: INNOVATION 💡</h3>
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium orbitron">Q2 2025</span>
+              </div>
+              <p class="text-gray-300">DeFi integration, yield farming protocols, cross-chain bridge construction</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center">
+            <div class="w-6 h-6 bg-gold rounded-full mr-8 flex-shrink-0"></div>
+            <div class="bg-jail-card p-8 rounded-2xl card-hover flex-grow">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-2xl font-bold text-white orbitron">PHASE 4: TOTAL LIBERATION 🔓</h3>
+                <span class="bg-purple-600 text-white px-4 py-2 rounded-full text-sm font-medium orbitron">Q4 2025</span>
+              </div>
+              <p class="text-gray-300">Complete ecosystem supremacy, global financial system overthrow, absolute freedom achieved</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="jail-gradient py-24 text-white cell-pattern cell-shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="mb-12">
+          <div class="text-7xl mb-8 lock-glow">🔒</div>
+          <div class="flex justify-center items-center mb-8">
+            <span class="chain-link"></span>
+            <span class="chain-link"></span>
+            <span class="chain-link"></span>
+          </div>
+        </div>
+        <h2 class="text-5xl md:text-6xl font-bold mb-8 orbitron">JOIN THE REVOLUTION</h2>
+        <p class="text-xl mb-12 max-w-4xl mx-auto leading-relaxed text-silver">
+          The time for financial liberation is NOW. Shatter the chains that bind you to traditional finance. 
+          Your freedom begins with JailCoin. The revolution starts in 2025.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <button onclick="openModal()" class="btn-gold px-16 py-8 rounded-full text-2xl orbitron tracking-wider">
+            🎁 CLAIM FREEDOM REWARDS
+          </button>
+          <button onclick="openModal()" class="btn-silver px-16 py-8 rounded-full text-2xl orbitron tracking-wider">
+            💎 MINT LIBERATION NFT - $25
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-16 cell-bars">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-10">
+          <div>
+            <h3 class="text-3xl font-bold mb-6 orbitron text-gold">🔒 JAILCOIN</h3>
+            <p class="text-gray-400 leading-relaxed">
+              Shattering the chains of financial oppression, one block at a time. 
+              The revolution is here.
+            </p>
+          </div>
+          
+          <div>
+            <h4 class="text-lg font-bold mb-6 orbitron text-gold">LIBERATION ARMY</h4>
+            <ul class="space-y-3 text-gray-400">
+              <li><a href="#" class="hover:text-gold transition duration-300">Discord Fortress</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Telegram Command</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Twitter Battlefield</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Reddit Underground</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="text-lg font-bold mb-6 orbitron text-gold">ARSENAL</h4>
+            <ul class="space-y-3 text-gray-400">
+              <li><a href="#" class="hover:text-gold transition duration-300">Liberation Manifesto</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Security Audit</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Battle Documentation</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Freedom Support</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="text-lg font-bold mb-6 orbitron text-gold">LEGAL FRAMEWORK</h4>
+            <ul class="space-y-3 text-gray-400">
+              <li><a href="#" class="hover:text-gold transition duration-300">Terms of Liberation</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Privacy Manifesto</a></li>
+              <li><a href="#" class="hover:text-gold transition duration-300">Risk Disclaimer</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+          <p class="orbitron">&copy; 2025 JAILCOIN LIBERATION FRONT. ALL RIGHTS RESERVED. BREAK FREE RESPONSIBLY.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content cell-pattern">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="text-center">
+          <h2 class="text-4xl font-bold text-gold mb-6 orbitron">🔒 JAILCOIN ACTION</h2>
+          <div class="w-32 h-32 gold-gradient rounded-full mx-auto mb-8 flex items-center justify-center">
+            <span class="text-black text-6xl">🚀</span>
+          </div>
+          <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+            You're about to execute an action that brings you one step closer to absolute financial freedom!
+          </p>
+          <p class="text-sm text-gray-500 mb-10 orbitron">
+            CONNECT YOUR WALLET TO CONTINUE YOUR LIBERATION JOURNEY
+          </p>
+          <button class="gold-gradient text-black px-12 py-4 rounded-full font-bold text-lg orbitron tracking-wider hover:scale-105 transition duration-300">
+            CONNECT WALLET
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function openModal() {
+        document.getElementById('modal').style.display = 'block';
+      }
+      
+      function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+      }
+      
+      // Close modal when clicking outside of it
+      window.onclick = function(event) {
+        const modal = document.getElementById('modal');
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
+      
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
